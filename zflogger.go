@@ -47,8 +47,6 @@ func (lf *logFields) MarshalZerologObject(e *zerolog.Event) {
 		Str("method", lf.Method).
 		Str("path", lf.Path).
 		Str("protocol", lf.Protocol).
-		// Str("referer", lf.Referer).
-		// Str("user_agent", lf.UserAgent).
 		Int("status_code", lf.StatusCode).
 		Float64("latency", lf.Latency).
 		Str("tag", "request")
@@ -91,8 +89,6 @@ func Middleware(log *zerolog.Logger) func(*fiber.Ctx) {
 			Host:     c.Hostname(),
 			Path:     c.Path(),
 			Protocol: c.Protocol(),
-			// Referer:   c.Get(fiber.HeaderReferer),
-			// UserAgent: c.Get(fiber.HeaderUserAgent),
 		}
 
 		defer func() {
