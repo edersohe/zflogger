@@ -13,7 +13,15 @@ import (
 	"github.com/rs/zerolog"
 )
 
-//New Logger returns logger with level, if isn't a string is not a valid level return a logger with level zerolog.NoLevel
+//Filter type
+type Filter func(*fiber.Ctx) bool
+
+//FilterAll method
+func FilterAll(c *fiber.Ctx) bool {
+	return true
+}
+
+//New returns logger with level, if isn't a string level valid return a logger with level zerolog.NoLevel
 //
 //Level strings: trace, debug, info, warn, error, fatal and panic
 func New(out io.Writer, level string) *zerolog.Logger {
@@ -72,8 +80,13 @@ func Marshal(i interface{}) []byte {
 }
 
 //Middleware RequestID, Logger and Recover by convenience
-func Middleware(log *zerolog.Logger) func(*fiber.Ctx) {
+func Middleware(log *zerolog.Logger, filter Filter) func(*fiber.Ctx) {
 	return func(c *fiber.Ctx) {
+		if filter != nil && filter(c) {
+			c.Next()
+			return
+		}
+
 		start := time.Now()
 
 		rid := c.Get(fiber.HeaderXRequestID)
