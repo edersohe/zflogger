@@ -34,8 +34,6 @@ type logFields struct {
 	Method     string
 	Path       string
 	Protocol   string
-	Referer    string
-	UserAgent  string
 	StatusCode int
 	Latency    float64
 	Error      error
