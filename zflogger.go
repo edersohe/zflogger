@@ -16,11 +16,6 @@ import (
 //Filter type
 type Filter func(*fiber.Ctx) bool
 
-//FilterAll method
-func FilterAll(c *fiber.Ctx) bool {
-	return true
-}
-
 //New returns logger with level, if isn't a string level valid return a logger with level zerolog.NoLevel
 //
 //Level strings: trace, debug, info, warn, error, fatal and panic
