@@ -2,30 +2,14 @@ package zflogger
 
 import (
 	"fmt"
-	"io"
 	"net/http"
 	"runtime/debug"
 	"time"
 
 	"github.com/gofiber/fiber"
 	"github.com/google/uuid"
-	jsoniter "github.com/json-iterator/go"
 	"github.com/rs/zerolog"
 )
-
-//Filter type used by the Middleware
-type Filter func(*fiber.Ctx) bool
-
-//New logger with level specified by string, if isn't a valid level string returns a logger with zerolog.NoLevel
-//
-//Valid level strings: trace, debug, info, warn, error, fatal and panic
-func New(out io.Writer, level string) *zerolog.Logger {
-	lvl, _ := zerolog.ParseLevel(level)
-	logger := zerolog.New(out).With().Timestamp().Logger().Level(lvl)
-	return &logger
-}
-
-var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
 type logFields struct {
 	ID         string
@@ -61,19 +45,8 @@ func (lf *logFields) MarshalZerologObject(e *zerolog.Event) {
 	}
 }
 
-//Marshal a interface with jsoniter
-func Marshal(i interface{}) []byte {
-	marshaled, err := json.Marshal(&i)
-
-	if err != nil {
-		return []byte("Marshal error: " + err.Error())
-	}
-
-	return marshaled
-}
-
-//Middleware RequestID, Logger and Recover by convenience
-func Middleware(log *zerolog.Logger, filter Filter) func(*fiber.Ctx) {
+//Middleware requestid + logger + recover for request traceability
+func Middleware(log zerolog.Logger, filter func(*fiber.Ctx) bool) func(*fiber.Ctx) {
 	return func(c *fiber.Ctx) {
 		if filter != nil && filter(c) {
 			c.Next()
