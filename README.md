@@ -9,10 +9,10 @@ The middleware contains functionality of requestid + logger(zerolog) + recover f
 package main
 
 import (
-	"os"
+    "os"
 
-	"github.com/edersohe/zflogger"
-	"github.com/gofiber/fiber"
+    "github.com/edersohe/zflogger"
+    "github.com/gofiber/fiber"
 )
 
 func main() {
@@ -21,16 +21,16 @@ func main() {
 
     app.Use(zflogger.Middleware(log, nil))
 
-	app.Get("/", func(c *fiber.Ctx) {
-		c.Send("Hello, World!")
-	})
+    app.Get("/", func(c *fiber.Ctx) {
+        c.Send("Hello, World!")
+    })
 
-	app.Get("/error", func(c *fiber.Ctx) {
-		a := 0
-		c.JSON(1 / a)
-	})
+    app.Get("/error", func(c *fiber.Ctx) {
+        a := 0
+        c.JSON(1 / a)
+    })
 
-	log.Fatal().Err(app.Listen(3000)).Str("tag", "server").Send()
+    log.Fatal().Err(app.Listen(3000)).Str("tag", "server").Send()
 }
 ```
 
@@ -41,10 +41,10 @@ func main() {
 package main
 
 import (
-	"os"
+    "os"
 
-	"github.com/edersohe/zflogger"
-	"github.com/gofiber/fiber"
+    "github.com/edersohe/zflogger"
+    "github.com/gofiber/fiber"
 )
 
 
@@ -60,16 +60,16 @@ func main() {
 
     app.Use(zflogger.Middleware(log, filter))
 
-	app.Get("/", func(c *fiber.Ctx) {
-		c.Send("Hello, World!")
-	})
+    app.Get("/", func(c *fiber.Ctx) {
+        c.Send("Hello, World!")
+    })
 
-	app.Get("/error", func(c *fiber.Ctx) {
-		a := 0
-		c.JSON(1 / a)
-	})
+    app.Get("/error", func(c *fiber.Ctx) {
+        a := 0
+        c.JSON(1 / a)
+    })
 
-	log.Fatal().Err(app.Listen(3000)).Str("tag", "server").Send()
+    log.Fatal().Err(app.Listen(3000)).Str("tag", "server").Send()
 }
 ```
 
