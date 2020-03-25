@@ -13,12 +13,12 @@ import (
 	"github.com/rs/zerolog"
 )
 
-//Filter type
+//Filter type used by the Middleware
 type Filter func(*fiber.Ctx) bool
 
-//New returns logger with level, if isn't a string level valid return a logger with level zerolog.NoLevel
+//New logger with level specified by string, if isn't a valid level string returns a logger with zerolog.NoLevel
 //
-//Level strings: trace, debug, info, warn, error, fatal and panic
+//Valid level strings: trace, debug, info, warn, error, fatal and panic
 func New(out io.Writer, level string) *zerolog.Logger {
 	lvl, _ := zerolog.ParseLevel(level)
 	logger := zerolog.New(out).With().Timestamp().Logger().Level(lvl)
@@ -61,7 +61,7 @@ func (lf *logFields) MarshalZerologObject(e *zerolog.Event) {
 	}
 }
 
-//Marshal helper for zerolog.Event.JSONRaw
+//Marshal a interface with jsoniter
 func Marshal(i interface{}) []byte {
 	marshaled, err := json.Marshal(&i)
 
@@ -85,8 +85,8 @@ func Middleware(log *zerolog.Logger, filter Filter) func(*fiber.Ctx) {
 		rid := c.Get(fiber.HeaderXRequestID)
 		if rid == "" {
 			rid = uuid.New().String()
+			c.Set(fiber.HeaderXRequestID, rid)
 		}
-		c.Set(fiber.HeaderXRequestID, rid)
 
 		fields := &logFields{
 			ID:       rid,

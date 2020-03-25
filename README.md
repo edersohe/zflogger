@@ -48,7 +48,7 @@ import (
 )
 
 
-// this filter apply logger middleware just when the context path is "/error",
+// this filter apply logger middleware when the context path is "/error",
 // else the zflogger.Middleware are skipped and the flow continue
 func filter(c *fiber.ctx) bool {
     return c.Path() != "/error"
